@@ -3,8 +3,8 @@ import torch.optim as optim
 import matplotlib.pyplot as plt
 
 
-def train_net(net, trainloader, valloader, criterion, optimizer,
-              device, num_epochs=10, visualize=True, lr_scheduler=None):
+def train_net(net, trainloader, valloader, criterion, optimizer, device,
+              num_epochs=10, visualize=True, lr_scheduler=None, eval_period=2000):
     available_schedulers = (
         optim.lr_scheduler.ReduceLROnPlateau,
         optim.lr_scheduler.CyclicLR,
@@ -29,7 +29,7 @@ def train_net(net, trainloader, valloader, criterion, optimizer,
                 if not isinstance(lr_scheduler, optim.lr_scheduler.ReduceLROnPlateau):
                     lr_scheduler.step()
             running_loss += loss.item()
-            if i % 2000 == 1999:
+            if i % eval_period == eval_period - 1:
                 net.eval()
                 val_loss = 0.0
                 correct = 0
@@ -45,7 +45,7 @@ def train_net(net, trainloader, valloader, criterion, optimizer,
                 val_acc = correct / total
                 val_loss /= len(valloader)
                 val_losses.append(val_loss)
-                running_loss /= 2000
+                running_loss /= eval_period
                 train_losses.append(running_loss)
                 print('[%d, %5d] train_loss: %.3f, val_loss: %.3f, val_acc: %.3f' %
                       (epoch + 1, i + 1, running_loss, val_loss, val_acc))
