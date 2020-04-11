@@ -4,3 +4,4 @@ data/*
 .idea/
 __pycache__/
 cookies.txt
+weights/*
