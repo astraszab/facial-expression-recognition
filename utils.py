@@ -13,10 +13,10 @@ def train_net(net, trainloader, valloader, criterion, optimizer, device,
     if lr_scheduler is not None and not isinstance(lr_scheduler, available_schedulers):
         print('Warning. Current lr_scheduler may work not in a proper way.')
     net.to(device)
+    net.train()
     train_losses = []
     val_losses = []
     for epoch in range(num_epochs):
-        net.train()
         running_loss = 0.0
         for i, data in enumerate(trainloader, 0):
             inputs, labels = data[0].to(device), data[1].to(device)
@@ -50,6 +50,7 @@ def train_net(net, trainloader, valloader, criterion, optimizer, device,
                 print('[%d, %5d] train_loss: %.3f, val_loss: %.3f, val_acc: %.3f' %
                       (epoch + 1, i + 1, running_loss, val_loss, val_acc))
                 running_loss = 0.0
+                net.train()
         if lr_scheduler is not None:
             if isinstance(lr_scheduler, optim.lr_scheduler.ReduceLROnPlateau):
                 lr_scheduler.step(val_losses[-1])
