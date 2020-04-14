@@ -1,6 +1,7 @@
 import torch
 import torch.optim as optim
 import matplotlib.pyplot as plt
+import torchvision.transforms as transforms
 
 
 def train_net(net, trainloader, valloader, criterion, optimizer, device,
@@ -60,3 +61,15 @@ def train_net(net, trainloader, valloader, criterion, optimizer, device,
         plt.plot(val_losses, label='Validation loss')
         plt.legend()
         plt.show()
+
+
+def get_transform(size):
+    transform = transforms.Compose(
+        [
+            transforms.Resize((size, size)),
+            transforms.Grayscale(),
+            transforms.ToTensor(),
+            transforms.Normalize((0.5,), (0.5,)),
+        ]
+    )
+    return transform
